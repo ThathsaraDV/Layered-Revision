@@ -16,7 +16,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import lk.ijse.pos.AppInitializer;
+import lk.ijse.pos.dao.CustomerDAOImpl;
 import lk.ijse.pos.db.DBConnection;
+import lk.ijse.pos.model.Customer;
 import lk.ijse.pos.view.tblmodel.CustomerTM;
 
 
@@ -54,24 +56,15 @@ public class ManageCustomerFormController implements Initializable {
 
         try {
 
-            Connection connection = DBConnection.getInstance().getConnection();
-            Statement stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * FROM Customer");
+            CustomerDAOImpl dao = new CustomerDAOImpl();
+            ArrayList<Customer> customers = dao.getAllCustomers();
             ArrayList<CustomerTM> alCustomers = new ArrayList<>();
 
-            while (rst.next()) {
-
-                CustomerTM customer = new CustomerTM(
-                        rst.getString(1),
-                        rst.getString(2),
-                        rst.getString(3));
-
-                alCustomers.add(customer);
-
+            for (Customer c: customers){
+                alCustomers.add(new CustomerTM(c.getcID(),c.getName(),c.getAddress()));
             }
 
             ObservableList<CustomerTM> olCustomers = FXCollections.observableArrayList(alCustomers);
-
             tblCustomers.setItems(olCustomers);
 
         } catch (Exception ex) {
