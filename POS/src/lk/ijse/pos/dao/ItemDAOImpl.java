@@ -37,6 +37,15 @@ public class ItemDAOImpl {
         return pstm.executeUpdate()>0;
     }
 
+    public boolean updateQtyOnHand(String code, int qtyOnHand) throws Exception {
+        Connection connection = DBConnection.getInstance().getConnection();
+        PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET qtyOnHand=? WHERE id=?");
+        pstm.setObject(1, qtyOnHand);
+        pstm.setObject(2, code);
+
+        return pstm.executeUpdate()>0;
+    }
+
     public boolean deleteItem(String id) throws Exception {
         Connection connection = DBConnection.getInstance().getConnection();
         PreparedStatement pstm = connection.prepareStatement("DELETE FROM Item WHERE id=?");
@@ -47,8 +56,10 @@ public class ItemDAOImpl {
 
     public Item searchItem(String id) throws Exception {
         Connection connection = DBConnection.getInstance().getConnection();
-        Statement stm = connection.createStatement();
-        ResultSet rst = stm.executeQuery("SELECT * FROM Item where id=?");
+        PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Item where id=?");
+        pstm.setObject(1, id);
+
+        ResultSet rst = pstm.executeQuery();
 
         if (rst.next()){
             return new Item(rst.getString(1),rst.getString(2),rst.getBigDecimal(3),rst.getInt(4));

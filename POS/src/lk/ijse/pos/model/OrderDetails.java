@@ -12,12 +12,12 @@ public class OrderDetails {
     private String orderId;
     private String itemCode;
     private int qty;
-    private BigDecimal unitPrice;
+    private double unitPrice;
 
     public OrderDetails() {
     }
 
-    public OrderDetails(String orderId, String itemCode, int qty, BigDecimal unitPrice) {
+    public OrderDetails(String orderId, String itemCode, int qty, double unitPrice) {
         this.orderId = orderId;
         this.itemCode = itemCode;
         this.qty = qty;
@@ -48,11 +48,11 @@ public class OrderDetails {
         this.qty = qty;
     }
 
-    public BigDecimal getUnitPrice() {
+    public double getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(BigDecimal unitPrice) {
+    public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
     }
 
