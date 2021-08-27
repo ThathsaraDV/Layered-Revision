@@ -20,10 +20,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import lk.ijse.pos.dao.CustomerDAOImpl;
-import lk.ijse.pos.dao.ItemDAOImpl;
-import lk.ijse.pos.dao.OrderDAOImpl;
-import lk.ijse.pos.dao.OrderDetailDAOImpl;
+import lk.ijse.pos.dao.CustomerDAO;
+import lk.ijse.pos.dao.ItemDAO;
+import lk.ijse.pos.dao.OrderDAO;
+import lk.ijse.pos.dao.OrderDetailDAO;
+import lk.ijse.pos.dao.impl.CustomerDAOImpl;
+import lk.ijse.pos.dao.impl.ItemDAOImpl;
+import lk.ijse.pos.dao.impl.OrderDAOImpl;
+import lk.ijse.pos.dao.impl.OrderDetailDAOImpl;
 import lk.ijse.pos.db.DBConnection;
 import lk.ijse.pos.model.Customer;
 import lk.ijse.pos.model.Item;
@@ -85,6 +89,14 @@ public class OrderFormController implements Initializable {
 
     private Connection connection;
 
+    CustomerDAO customerDAO = new CustomerDAOImpl();
+
+    ItemDAO itemDAO = new ItemDAOImpl();
+
+    OrderDAO orderDAO = new OrderDAOImpl();
+
+    OrderDetailDAO orderDetailDAO = new OrderDetailDAOImpl();
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -126,7 +138,7 @@ public class OrderFormController implements Initializable {
                 }
 
                 try {
-                    CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+
                     Customer customer = customerDAO.searchCustomer(customerID);
 
                     if (customer != null) {
@@ -157,7 +169,7 @@ public class OrderFormController implements Initializable {
                 }
 
                 try {
-                    ItemDAOImpl itemDAO = new ItemDAOImpl();
+
                     Item item = itemDAO.searchItem(itemCode);
 
                     if (item != null) {
@@ -231,7 +243,6 @@ public class OrderFormController implements Initializable {
 
     private void loadAllData() throws SQLException {
 
-        CustomerDAOImpl customerDAO = new CustomerDAOImpl();
         try {
             ArrayList<Customer> allCustomers = customerDAO.getAllCustomers();
             cmbCustomerID.getItems().removeAll(cmbCustomerID.getItems());
@@ -246,7 +257,6 @@ public class OrderFormController implements Initializable {
         }
 
 
-        ItemDAOImpl itemDAO = new ItemDAOImpl();
         try {
             ArrayList<Item> allItems = itemDAO.getAllItems();
             cmbItemCode.getItems().removeAll(cmbItemCode.getItems());
@@ -325,7 +335,6 @@ public class OrderFormController implements Initializable {
         try {
             connection.setAutoCommit(false);
 
-            OrderDAOImpl orderDAO = new OrderDAOImpl();
             boolean isSaved = orderDAO.saveOrder(new Orders(txtOrderID.getText(), parseDate(txtOrderDate.getEditor().getText()), cmbCustomerID.getSelectionModel().getSelectedItem()));
 
             if (!isSaved) {
@@ -336,8 +345,7 @@ public class OrderFormController implements Initializable {
 
             for (OrderDetailTM detail : olOrderDetails) {
 
-                OrderDetailDAOImpl detailDAO = new OrderDetailDAOImpl();
-                isSaved = detailDAO.saveOrderDetails(new OrderDetails(txtOrderID.getText(),detail.getItemCode(),detail.getQty(),detail.getUnitPrice()));
+                isSaved = orderDetailDAO.saveOrderDetails(new OrderDetails(txtOrderID.getText(),detail.getItemCode(),detail.getQty(),detail.getUnitPrice()));
 
                 if (!isSaved) {
                     connection.rollback();
