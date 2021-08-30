@@ -16,8 +16,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import lk.ijse.pos.AppInitializer;
-import lk.ijse.pos.dao.CustomerDAO;
-import lk.ijse.pos.dao.impl.CustomerDAOImpl;
+import lk.ijse.pos.dao.custom.CustomerDAO;
+import lk.ijse.pos.dao.custom.impl.CustomerDAOImpl;
 import lk.ijse.pos.model.Customer;
 import lk.ijse.pos.view.tblmodel.CustomerTM;
 
@@ -54,7 +54,7 @@ public class ManageCustomerFormController implements Initializable {
 
         try {
 
-            ArrayList<Customer> customers = customerDAO.getAllCustomers();
+            ArrayList<Customer> customers = customerDAO.getAll();
             ArrayList<CustomerTM> alCustomers = new ArrayList<>();
 
             for (Customer c: customers){
@@ -120,7 +120,7 @@ public class ManageCustomerFormController implements Initializable {
 
             try {
 
-                boolean isDeleted = customerDAO.deleteCustomer(customerID);
+                boolean isDeleted = customerDAO.delete(customerID);
 
 
                 if (isDeleted) {
@@ -158,7 +158,7 @@ public class ManageCustomerFormController implements Initializable {
 
             try {
 
-                boolean isSaved = customerDAO.addCustomer(new Customer(txtCustomerId.getText(),txtCustomerName.getText(),txtCustomerAddress.getText()));
+                boolean isSaved = customerDAO.save(new Customer(txtCustomerId.getText(),txtCustomerName.getText(),txtCustomerAddress.getText()));
 
                 if (isSaved) {
                     loadAllCustomers();
@@ -172,7 +172,7 @@ public class ManageCustomerFormController implements Initializable {
         } else {
             try {
                 //Update
-                boolean isUpdated = customerDAO.updateCustomer(new Customer(txtCustomerId.getText(),txtCustomerName.getText(),txtCustomerAddress.getText()));
+                boolean isUpdated = customerDAO.update(new Customer(txtCustomerId.getText(),txtCustomerName.getText(),txtCustomerAddress.getText()));
 
                 if (isUpdated) {
                     loadAllCustomers();
